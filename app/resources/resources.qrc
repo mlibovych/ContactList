@@ -1,0 +1,7 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource>
+        <file>qmain.qss</file>
+        <file>silver_star_30.png</file>
+        <file>gold_star_30.png</file>
+    </qresource>
+</RCC>
