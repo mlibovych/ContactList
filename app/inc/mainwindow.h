@@ -47,6 +47,9 @@ public slots:
     void addContact(const QString &name, const QString &number);
     void searchContacts(const QString &text, bool favourite);
     void updateContactStatus(const Contact &contact);
+    void failValidation();
+    void failAdding();
+    void successAdding();
 
 signals:
     void changeWidget(QWidget *widget);

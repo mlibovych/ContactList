@@ -21,4 +21,5 @@ public slots:
 
 signals:
     void addContact(const QString &name, const QString &number);
+    void failValidation();
 };

@@ -27,10 +27,13 @@ NewContactScreen::NewContactScreen(QWidget *parent) : QWidget(parent) {
     layoutOuter->setRowStretch(layoutOuter->rowCount(), 2);
     layoutOuter->setVerticalSpacing(20);
 
-    
+    auto mainwindow = this->parent();
+
     connect(addButton, SIGNAL(clicked()), SLOT(addContact()));
     connect(this, SIGNAL(addContact(const QString &, const QString &)),
-            this->parent(), SLOT(addContact(const QString &, const QString &)));
+            mainwindow, SLOT(addContact(const QString &, const QString &)));
+    connect(this, SIGNAL(failValidation()),
+            mainwindow, SLOT(failValidation()));
 }
 
 NewContactScreen::~NewContactScreen()
@@ -44,8 +47,7 @@ void NewContactScreen::addContact() {
     bool hasMatch = match.hasMatch();
 
     if (nameField->text().isEmpty() ||  numberField->text().isEmpty() || !hasMatch) {
-        // emit fail
-        // QMessageBox::warning(parent(), "Alert", "Invalid data.");
+        emit failValidation();
         return;
     }
     emit addContact(nameField->text(), numberField->text());

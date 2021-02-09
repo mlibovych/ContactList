@@ -81,5 +81,14 @@ void MainWindow::updateContactStatus(const Contact &contact) {
     emit setContactStatus(contact);
 }
 
+void MainWindow::failValidation() {
+    QMessageBox::warning(this, "Alert", "Invalid data.");
+}
 
+void MainWindow::failAdding() {
+    QMessageBox::warning(this, "Alert", "This number is already registred.");
+}
 
+void MainWindow::successAdding() {
+    QMessageBox::information(this, "Alert", "Contact saved.");
+}

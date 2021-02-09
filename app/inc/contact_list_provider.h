@@ -36,5 +36,6 @@ public slots:
 
 signals:
     void showContact(const Contact &contact);
-    void fail(const QString &name, const QString &number);
+    void fail();
+    void success();
 };

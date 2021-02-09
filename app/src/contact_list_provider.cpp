@@ -11,6 +11,13 @@ ContactListProvider::ContactListProvider(QObject *parent) : QObject(parent), app
         exit(1);
     }
     createIfNotExist();
+
+    auto mainwindow = this->parent();
+
+    connect(this, SIGNAL(fail()),
+            mainwindow, SLOT(failAdding()));
+    connect(this, SIGNAL(success()),
+            mainwindow, SLOT(successAdding()));
 }
 
 void ContactListProvider::checkDir() {
@@ -56,7 +63,6 @@ std::optional<int> ContactListProvider::createNewContact(const QString &name, co
     query.bindValue(":number", number);
     query.exec();
     if (query.first() && !query.value(0).isNull()) {
-        qDebug() << "This numver already exist";
         return std::nullopt;
     }
     //try to insert
@@ -126,12 +132,11 @@ void ContactListProvider::saveContact(const QString &name, const QString &number
             .number = number,
             .status = 0
         };
-        // QMessageBox::information(mediator->getMainWindow(), "Alert", "Contact saved.");
+        emit success();
         emit showContact(contact);
         return;
     }
-    // QMessageBox::warning(mediator->getMainWindow(), "Alert", "This number is already registred.");
-    emit fail(name, number);
+    emit fail();
 }
 
 void ContactListProvider::updateContactStatus(const Contact &contact) {
