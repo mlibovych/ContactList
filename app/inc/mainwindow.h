@@ -1,33 +1,56 @@
 #pragma once
 
+#include "contact_list_provider.h"
+#include "general_screen.h"
+#include "new_contact_screen.h"
+
 #include <QtWidgets>
 
-#include "mediator.h"
-#include "component.h"
+#ifdef _WIN32
+#define DELIM "\\"
+#else
+#define DELIM "/"
+#endif
 
-class Component;
-class Mediator;
+class ContactListProvider;
+class GeneralScreen;
+class NewContactScreen;
 
-class MainWindow : public QMainWindow, public Component
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 private:
-    std::unique_ptr<QWidget> central; 
-    std::unique_ptr<QStackedLayout> layoutOuter;
+    QWidget *central; 
+    QStackedLayout *layoutOuter;
 
-    std::unique_ptr<QToolBar> toolBar;
-    std::unique_ptr<QAction> actionContacts;
-    std::unique_ptr<QAction> actionAdd;
+    QToolBar *toolBar;
+    QAction *actionContacts;
+    QAction *actionAdd;
+
+    GeneralScreen *generalScreen;
+    NewContactScreen *newContactScreen;
+    ContactListProvider *contactListProvider;
 
     void initToolbar();
 
 public:
-    explicit MainWindow(Mediator *mediator, QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
     QStackedLayout *getLayout();
 
 public slots:
     void setWidget(QWidget *widget);
+    void toContactList();
+    void toNewContact();
+    void addContact(const QString &name, const QString &number);
+    void searchContacts(const QString &text, bool favourite);
+    void updateContactStatus(const Contact &contact);
+
+signals:
+    void changeWidget(QWidget *widget);
+    void saveContact(const QString &name, const QString &number);
+    void refreshContacts(const std::vector<Contact> &contacts);
+    void setContactStatus(const Contact &contact);
 };

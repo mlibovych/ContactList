@@ -2,24 +2,18 @@
 
 #include <QtWidgets>
 
-#include "mediator.h"
-#include "component.h"
-
-class Component;
-class Mediator;
-
-class NewContactScreen : public QWidget, public Component
+class NewContactScreen : public QWidget
 {
     Q_OBJECT
 
 private:
-    std::unique_ptr<QGridLayout> layoutOuter;
-    std::unique_ptr<QLineEdit> nameField;
-    std::unique_ptr<QLineEdit> numberField;
-    std::unique_ptr<QPushButton> addButton;
+    QGridLayout *layoutOuter;
+    QLineEdit *nameField;
+    QLineEdit *numberField;
+    QPushButton *addButton;
 
 public:
-    explicit NewContactScreen(Mediator *mediator, QWidget *parent = nullptr);
+    explicit NewContactScreen(QWidget *parent = nullptr);
     ~NewContactScreen();
 
 public slots:

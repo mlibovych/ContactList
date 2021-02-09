@@ -1,20 +1,16 @@
 #include <iostream>
 
-#include "mediator.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    MainWindow window;
     QFile File(":/qmain.qss");
-    QString StyleSheet;
-    Mediator *mediator = new Mediator;
 
     File.open(QFile::ReadOnly);
-    StyleSheet = QLatin1String(File.readAll());
-    app.setStyleSheet(StyleSheet);
-
-    app.exec();
-    delete mediator;
+    app.setStyleSheet( QLatin1String(File.readAll()));
+    window.show();
     
-    return 0;
+    return app.exec();
 }

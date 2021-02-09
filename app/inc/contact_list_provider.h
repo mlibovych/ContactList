@@ -6,14 +6,12 @@
 #include <QSqlQuery>
 #include <QtWidgets>
 
-#include "mediator.h"
-#include "component.h"
+#include "contact.h"
+#include "mainwindow.h"
 
-class Component;
-class Mediator;
 struct Contact;
 
-class ContactListProvider : public QObject, public Component
+class ContactListProvider : public QObject
 {
     Q_OBJECT
 
@@ -26,7 +24,7 @@ private:
     void checkDir();
     void createIfNotExist();
 public:
-    ContactListProvider(const Mediator *mediator_);
+    ContactListProvider(QObject *parent = nullptr);
 
     std::optional<int> createNewContact(const QString &name, const QString &number) const;
     std::vector<Contact> selectAllContacts() const;

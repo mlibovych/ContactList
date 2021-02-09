@@ -1,6 +1,6 @@
 #include "contact_list_provider.h"
 
-ContactListProvider::ContactListProvider(const Mediator *mediator_) : Component(mediator_), appPath(QDir::homePath() + DELIM + ".contactlist"),
+ContactListProvider::ContactListProvider(QObject *parent) : QObject(parent), appPath(QDir::homePath() + DELIM + ".contactlist"),
                                         dbPath(appPath + DELIM + "myDb"),
                                         db(QSqlDatabase::addDatabase("QSQLITE", "myDb"))
 {
@@ -126,11 +126,11 @@ void ContactListProvider::saveContact(const QString &name, const QString &number
             .number = number,
             .status = 0
         };
-        QMessageBox::information(mediator->getMainWindow(), "Alert", "Contact saved.");
+        // QMessageBox::information(mediator->getMainWindow(), "Alert", "Contact saved.");
         emit showContact(contact);
         return;
     }
-    QMessageBox::warning(mediator->getMainWindow(), "Alert", "This number is already registred.");
+    // QMessageBox::warning(mediator->getMainWindow(), "Alert", "This number is already registred.");
     emit fail(name, number);
 }
 

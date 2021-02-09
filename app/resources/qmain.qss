@@ -2,6 +2,10 @@
     background-color: #1E1C1B;
 }
 
+#MainWindow {
+    background-color: #1E1C1B;
+}
+
 #ContactWidget {
     background-color: DarkOrange;
 }
