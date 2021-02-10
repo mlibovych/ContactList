@@ -1,5 +1,8 @@
 #pragma once
 
+#include <set>
+#include <unordered_set>
+
 #include <QtWidgets>
 
 #include "contact_widget.h"
@@ -35,21 +38,22 @@ class GeneralScreen : public QWidget
     Q_OBJECT
 
 private:
-    QScrollArea *scroll_widget;
-    QWidget *content_widget;
+    QListWidget *list_widget;
+
+    QListView *list;
     ToolsWidget *tools_widget;
     QFrame *separator;
     QVBoxLayout *layout_outer;
-    QVBoxLayout *layout_inner;
 
-    QVector<ContactWidget *> contacts;
+    std::set<Contact> contacts;
 
 public:
     explicit GeneralScreen(QWidget *parent = nullptr);
     ~GeneralScreen();
 
 public slots:
-    void showContact(const Contact &contact);
-    void refreshView(const std::vector<Contact> &new_contacts);
+    void addContact(const Contact &contact);
+    void refreshContacts(const std::set<Contact> &new_contacts);
+    void refreshContactsView(const std::set<Contact> &new_contacts);
 
 };

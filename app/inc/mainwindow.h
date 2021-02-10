@@ -1,10 +1,13 @@
 #pragma once
 
+#include <unordered_set>
+
+#include <QtWidgets>
+
 #include "contact_list_provider.h"
 #include "general_screen.h"
 #include "new_contact_screen.h"
 
-#include <QtWidgets>
 
 #ifdef _WIN32
 #define DELIM "\\"
@@ -54,6 +57,7 @@ public slots:
 signals:
     void changeWidget(QWidget *widget);
     void saveContact(const QString &name, const QString &number);
-    void refreshContacts(const std::vector<Contact> &contacts);
+    void refreshContacts(const std::set<Contact> &contacts);
+    void refreshContactsView(const std::set<Contact> &contacts);
     void setContactStatus(const Contact &contact);
 };

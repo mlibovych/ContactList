@@ -20,6 +20,10 @@ public:
     explicit ContactWidget(const Contact &contact, QWidget *parent = nullptr);
     ~ContactWidget();
 
+    const Contact &getData() const {
+        return data;
+    }
+
 public slots:
     void updateContactStatus();
 

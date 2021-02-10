@@ -57,24 +57,12 @@ void ToolsWidget::searchContacts() {
 GeneralScreen::GeneralScreen(QWidget *parent) : QWidget(parent) {  
     setMinimumHeight(700);
     setObjectName("General");
-    scroll_widget = new QScrollArea(this);
-    scroll_widget->setMinimumHeight(600);
 
     tools_widget = new ToolsWidget(this);
 
-    content_widget = new QWidget(scroll_widget);
-    content_widget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
-    content_widget->setObjectName("Default");
-
-    scroll_widget->setWidget(content_widget);
-    scroll_widget->setWidgetResizable (true);
-    scroll_widget->setVerticalScrollBarPolicy (Qt::ScrollBarAsNeeded);
-    scroll_widget->setObjectName("Default");
-
-    layout_inner = new QVBoxLayout(content_widget);
-    layout_inner->setContentsMargins(0 ,0 ,0, 0);
-    layout_inner->setSpacing(2);
-
+    list_widget = new QListWidget();
+    list_widget->setSelectionMode(QAbstractItemView::NoSelection);
+    list_widget->setSpacing(2);
 
     separator = new QFrame(this);
     separator->setFrameShape(QFrame::HLine);
@@ -84,8 +72,7 @@ GeneralScreen::GeneralScreen(QWidget *parent) : QWidget(parent) {
     layout_outer->setContentsMargins(0, 0, 0, 0);
     layout_outer->addWidget(tools_widget);
     layout_outer->addWidget(separator);
-    layout_outer->addWidget(scroll_widget);
-    
+    layout_outer->addWidget(list_widget);  
 }
 
 GeneralScreen::~GeneralScreen()
@@ -93,23 +80,38 @@ GeneralScreen::~GeneralScreen()
 
 }
 
-void GeneralScreen::showContact(const Contact &contact) {
+void GeneralScreen::addContact(const Contact &contact) {
+    QListWidgetItem *item = new QListWidgetItem(list_widget);
     ContactWidget *row = new ContactWidget(contact, this); //init
     
     row->setObjectName("ContactWidget");
     row->setMinimumHeight(50);
     row->setMaximumHeight(50);
-    layout_inner->addWidget(row); //insert in area
-    contacts.push_back(row);
+
+    item->setSizeHint({50, 50});
+
+    list_widget->addItem(item);
+    list_widget->setItemWidget(item, row);
+    contacts.insert(std::move(contact));
 }
 
-void GeneralScreen::refreshView(const std::vector<Contact> &new_contacts) {
-    for (auto contact : contacts) {
-        delete contact;
-    }
-    contacts.clear();
-
+void GeneralScreen::refreshContacts(const std::set<Contact> &new_contacts) {
+    list_widget->clear();
+    contacts = std::move(new_contacts);
     for (const auto &contact : new_contacts) {
-        showContact(contact);
+        addContact(contact);
+    }
+}
+
+void GeneralScreen::refreshContactsView(const std::set<Contact> &new_contacts) {
+    for (int i = 0; i < list_widget->count(); ++i) {
+        auto item = list_widget->item(i);
+        auto contact_widget = static_cast<ContactWidget*> (list_widget->itemWidget(item));
+        if (new_contacts.count(contact_widget->getData())) {
+            item->setHidden(0);
+        }
+        else {
+            item->setHidden(1);
+        }
     }
 }

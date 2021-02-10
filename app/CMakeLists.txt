@@ -12,13 +12,12 @@ set(TARGET contactlist)
 
 find_package(Qt5 COMPONENTS Widgets Sql Multimedia REQUIRED)
 
-set(SOURCES src/main.cpp src/mainwindow.cpp 
-            src/component.cpp src/contact_list_provider.cpp
+set(SOURCES src/main.cpp src/mainwindow.cpp src/contact_list_provider.cpp
             src/contact_list_provider.cpp src/general_screen.cpp src/new_contact_screen.cpp
-            src/contact_widget.cpp)
+            src/contact_widget.cpp src/contact.cpp)
 
-set(INCLUDES inc/mainwindow.h inc/component.h 
-             inc/contact_list_provider.h inc/contact_list_provider.h inc/general_screen.h
+set(INCLUDES inc/mainwindow.h inc/contact_list_provider.h 
+             inc/contact_list_provider.h inc/general_screen.h
              inc/new_contact_screen.h inc/contact_widget.h inc/contact.h)
 
 qt5_add_resources(SOURCES resources/resources.qrc)

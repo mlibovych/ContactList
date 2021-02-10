@@ -1,5 +1,6 @@
 #include "contact_list_provider.h"
 
+
 ContactListProvider::ContactListProvider(QObject *parent) : QObject(parent), appPath(QDir::homePath() + DELIM + ".contactlist"),
                                         dbPath(appPath + DELIM + "myDb"),
                                         db(QSqlDatabase::addDatabase("QSQLITE", "myDb"))
@@ -37,8 +38,9 @@ void ContactListProvider::createIfNotExist() {
                                                         number VARCHAR(255) NOT NULL UNIQUE,\
                                                         favourite INTEGER);\
                     ");
-        query.exec("CREATE INDEX song_id_index ON songs (id);");
-        for (int i = 0; i < 3; ++i) {
+        query.exec("CREATE INDEX contact_id ON contacts (id);");
+        query.exec("CREATE INDEX contact_status ON contacts (favourite);");
+        for (int i = 0; i < 10; ++i) {
             query.prepare("INSERT INTO contacts (name, number, favourite) VALUES (:name, :number, 0);");
             std::string name = "test_contact" + std::to_string(i);
             std::string number = "55501460" + std::to_string(i);
@@ -81,14 +83,14 @@ std::optional<int> ContactListProvider::createNewContact(const QString &name, co
     return id;
 }
 
-std::vector<Contact> ContactListProvider::selectAllContacts() const {
+std::set<Contact> ContactListProvider::selectAllContacts() const {
     QSqlQuery query(QSqlDatabase::database("myDb"));
-    std::vector<Contact> contacts;
+    std::set<Contact> contacts;
 
     query.prepare("SELECT * FROM contacts;");
     query.exec();
     while (query.next()) {
-        contacts.push_back({
+        contacts.insert({
             .id = query.value(0).toInt(),
             .name = query.value(1).toString(),
             .number = query.value(2).toString(),
@@ -98,23 +100,21 @@ std::vector<Contact> ContactListProvider::selectAllContacts() const {
     return contacts;
 }
 
-std::vector<Contact> ContactListProvider::selectContactsLike(const QString &text, bool favourite) {
+std::set<Contact> ContactListProvider::selectContactsLike(const QString &text, bool favourite) {
     QSqlQuery query(QSqlDatabase::database("myDb"));
-    std::vector<Contact> contacts;
+    std::set<Contact> contacts;
 
     if (!favourite) {
         query.prepare("SELECT * FROM contacts WHERE name LIKE :text;");
-    
     }
     else {
         query.prepare("SELECT * FROM contacts WHERE name LIKE :text AND favourite=:favourite;");
-    
     }
     query.bindValue(":text", "%" + text + "%");
     query.bindValue(":favourite", static_cast<int> (favourite));
     query.exec();
     while (query.next()) {
-        contacts.push_back({
+        contacts.insert({
             .id = query.value(0).toInt(),
             .name = query.value(1).toString(),
             .number = query.value(2).toString(),

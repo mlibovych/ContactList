@@ -1,6 +1,8 @@
 #pragma once
 
 #include <optional>
+#include <set>
+#include <unordered_set>
 
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -27,8 +29,8 @@ public:
     ContactListProvider(QObject *parent = nullptr);
 
     std::optional<int> createNewContact(const QString &name, const QString &number) const;
-    std::vector<Contact> selectAllContacts() const;
-    std::vector<Contact> selectContactsLike(const QString &text, bool favourite);
+    std::set<Contact> selectAllContacts() const;
+    std::set<Contact> selectContactsLike(const QString &text, bool favourite);
 
 public slots:
     void saveContact(const QString &name, const QString &number);

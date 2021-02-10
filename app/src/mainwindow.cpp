@@ -21,9 +21,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     connect(this, SIGNAL(saveContact(const QString &, const QString &)),
             contactListProvider, SLOT(saveContact(const QString &, const QString &)));
     connect(contactListProvider, SIGNAL(showContact(const Contact &)),
-            generalScreen, SLOT(showContact(const Contact &)));
-    connect(this, SIGNAL(refreshContacts(const std::vector<Contact> &)),
-            generalScreen, SLOT(refreshView(const std::vector<Contact> &)));
+            generalScreen, SLOT(addContact(const Contact &)));
+    connect(this, SIGNAL(refreshContacts(const std::set<Contact> &)),
+            generalScreen, SLOT(refreshContacts(const std::set<Contact> &)));
+    connect(this, SIGNAL(refreshContactsView(const std::set<Contact> &)),
+            generalScreen, SLOT(refreshContactsView(const std::set<Contact> &)));
     connect(this, SIGNAL(setContactStatus(const Contact &)),
             contactListProvider, SLOT(updateContactStatus(const Contact &)));
 
@@ -73,7 +75,7 @@ void MainWindow::addContact(const QString &name, const QString &number) {
 }
 
 void MainWindow::searchContacts(const QString &text, bool favourite) {
-    emit refreshContacts(contactListProvider->selectContactsLike(text, favourite));
+    emit refreshContactsView(contactListProvider->selectContactsLike(text, favourite));
 }
 
 
